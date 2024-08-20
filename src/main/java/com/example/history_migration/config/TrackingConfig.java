@@ -12,13 +12,23 @@ import javax.sql.DataSource;
 @Configuration
 public class TrackingConfig {
 
-    @Bean
+    /*@Bean
     public JdbcTemplateLockProvider lockProvider(DataSource dataSource) {
         return new JdbcTemplateLockProvider(dataSource);
-    }
+    }*/
 
 /*    @Bean
     public LockProvider shedLockRepository(JdbcTemplate jdbcTemplate) {
         return new JdbcTemplateLockProvider(jdbcTemplate);
     }*/
+
+    @Bean
+    public LockProvider lockProvider(JdbcTemplate jdbcTemplate) {
+        return new JdbcTemplateLockProvider(
+                JdbcTemplateLockProvider.Configuration.builder()
+                        .withJdbcTemplate(jdbcTemplate)
+                        .usingDbTime() // Works with MySQL
+                        .build()
+        );
+    }
 }
